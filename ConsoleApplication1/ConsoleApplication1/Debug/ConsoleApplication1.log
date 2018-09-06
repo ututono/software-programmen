@@ -1,7 +1,6 @@
 ﻿E:\visual stdio\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: 中间目录(Debug\)包含从另一个项目(ConsoleApplication1.vcxproj)共享的文件。   这会导致错误的清除和重新生成行为。
-  stdafx.cpp
   iostream.cpp
 w:\gitrepository\software\consoleapplication1\consoleapplication1\iostream.cpp(9): warning C4101: “ch”: 未引用的局部变量
-  ConsoleApplication1.cpp
-  正在生成代码...
+w:\gitrepository\software\consoleapplication1\consoleapplication1\iostream.cpp(88): warning C4018: “<”: 有符号/无符号不匹配
+w:\gitrepository\software\consoleapplication1\consoleapplication1\iostream.cpp(116): warning C4018: “<”: 有符号/无符号不匹配
   ConsoleApplication1.vcxproj -> W:\GITrepository\software\ConsoleApplication1\Debug\WordCount.exe
