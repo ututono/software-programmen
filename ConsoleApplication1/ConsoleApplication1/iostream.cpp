@@ -1,5 +1,6 @@
 #include"stdafx.h"
 
+
 char str[500];
 
 int CharCount(char * path)
@@ -111,8 +112,8 @@ int EmptylineCount(char * path)
 int regelwordcount(char *strtemp)					//每行合法字符个数统计,不计入格式控制字符和注释
 {
 	int n = 0;
-	int len = 0;
-	int tag1 = 0;
+	unsigned int len = 0;
+	unsigned int tag1 = 0;
 	for (len = 0; (len < strlen(strtemp) && (tag1 < 2)); len++)
 		if (!(strtemp[len] == '\n' || strtemp[len] == '\t' || strtemp[len] == ' '))
 			if ((strtemp[len] == '/'&& strtemp[len + 1] == '/') || (strtemp[len] == '/'&& strtemp[len + 1] == '*'))
@@ -146,6 +147,184 @@ int CodeCount(char * path)
 int CoCount(char * path)
 {
 	return LineCount(path)-EmptylineCount(path)-CodeCount(path);
+}
+
+char * wchartochar(const wchar_t* wchar)					//WCHAR转换为CHAR
+{
+	char * m_char;
+	int len = WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), NULL, 0, NULL, NULL);
+	m_char = new char[len + 1];
+	WideCharToMultiByte(CP_ACP, 0, wchar, wcslen(wchar), m_char, len, NULL, NULL);
+	m_char[len] = '\0';
+	return m_char;
+}
+
+const LPCWSTR charstrtowcharstr(char *charstr)
+{
+
+	WCHAR wszClassName[256];
+	memset(wszClassName, 0, sizeof(wszClassName));
+	MultiByteToWideChar(CP_ACP, 0, charstr, strlen(charstr) + 1, wszClassName,sizeof(wszClassName) / sizeof(wszClassName[0]));
+	return wszClassName;
+}
+
+//void Print(char *strtemp)
+//{
+//	for (int i = 0; i<strlen(strtemp)-1; i++)
+//	{
+//		printf("%s ", str[i]);
+//	}
+//	printf("\n");
+//}
+
+void liemain(char *path)
+{
+	int charcount = 0;
+	int wordcount = 0;
+	int linecount = 0;
+
+	while (1)
+	{
+		char ch[5];
+		printf("Please input the key %s: \t",path);
+		scanf("%s", ch);
+		if (ch[0] == 'c')
+		{
+			charcount = CharCount(path);
+			printf("Gesamtheit: %d\n", charcount);
+		}
+		else if (ch[0] == 'w')
+		{
+			wordcount = WordCount(path);
+			printf("Gesamtheit: %d\n", wordcount);
+		}
+		else if (ch[0] == 'l')
+		{
+			linecount = LineCount(path);
+			printf("Gesamtheit: %d\n", linecount);
+		}
+		else if (ch[0] == 'a')
+		{
+			UebrigFunktion(path);
+		}
+		else {
+			printf("ERROR\n");
+			break;
+		}
+	}
+}
+
+bool MatchWithAsteriskW(char* str1, char* pattern)
+{
+	if (str1 == NULL) return false;
+	if (pattern == NULL) return false;
+	int len1 = strlen(str1);
+	int len2 = strlen(pattern);
+	int mark = 0;//用于分段标记,'*'分隔的字符串
+	int p1 = 0, p2 = 0;
+
+	while (p1<len1 && p2<len2)
+	{
+		if (pattern[p2] == '?')
+		{
+			p1++;
+			p2++;
+			continue;
+		}
+		if (pattern[p2] == '*')
+		{
+			/*如果当前是*号，则mark前面一部分已经获得匹配，
+			*从当前点开始继续下一个块的匹配
+			*/
+			p2++;
+			mark = p2;
+			continue;
+		}
+		if (str1[p1] != pattern[p2])
+		{
+			if (p1 == 0 && p2 == 0)	//如果是首字符，特殊处理，不相同即匹配失败
+			{
+				return false;
+			}
+			/*
+			* p2返回到mark处，
+			* p1需要返回到下一个位置。
+			* 因为*前已经获得匹配，所以mark打标之前的不需要再比较
+			*/
+			p1 -= p2 - mark - 1;
+			p2 = mark;
+			continue;
+		}
+		/*
+		* 此处处理相等的情况
+		*/
+		p1++;
+		p2++;
+	}
+	if (p2 == len2)
+	{
+		if (p1 == len1)
+		{
+			/*
+			* 两个字符串都结束了，说明模式匹配成功
+			*/
+			return true;
+		}
+		if (pattern[p2 - 1] == '*')
+		{
+			/*
+			* str1还没有结束，但pattern的最后一个字符是*，所以匹配成功
+			*
+			*/
+			return true;
+		}
+	}
+	while (p2<len2)
+	{
+		/*
+		* pattern多出的字符只要有一个不是*,匹配失败
+		*
+		*/
+		if (pattern[p2] != '*')
+			return false;
+		p2++;
+	}
+	return true;
+}
+
+
+
+
+void Filefind(char * path,char *filename)
+{
+	HANDLE Find;
+	WIN32_FIND_DATA finddata;
+	char dir[200];
+	strcpy(dir, path);
+	strcat(dir, "\\*.*");							//这里一定要指明通配符，不然不会读取所有文件和目录
+	Find = FindFirstFile(charstrtowcharstr(dir), &finddata);
+	do
+	{
+		if ((finddata.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY != 0 )&&									//判断是否具有某个属性，可以用按位and运算符（&）
+			strcmp(wchartochar(finddata.cFileName), ".") != 0 && strcmp(wchartochar(finddata.cFileName), "..") != 0)		//一旦找到'.'或".."，则不为空文件夹
+		{
+			strcpy(dir, path);
+			strcat(dir, "\\");
+			strcat(dir, wchartochar(finddata.cFileName));
+			Filefind(dir,filename);
+		}
+		else
+		{
+			if (MatchWithAsteriskW(wchartochar(finddata.cFileName), filename))
+			{
+				printf("gets\n");
+				strcat(path, "\\");
+				liemain(strcat(path,wchartochar(finddata.cFileName)));
+			}
+			//printf("Lage ist:%s\\%s\n", path, wchartochar(finddata.cFileName));
+		}
+	} while (FindNextFile(Find,&finddata));
+	FindClose(Find);
 }
 
 

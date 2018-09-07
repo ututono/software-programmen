@@ -4,7 +4,7 @@
 #define OK     1
 #define ERROR  0
 #define IBFEASIBLE  -1
-#define OVERFLOW    -2 
+
 
 //基本功能
 int CharCount(char *path);		//字符统计函数 -c
@@ -15,3 +15,5 @@ void UebrigFunktion(char *path);	//复杂行数统计函数
 int EmptylineCount(char *path);		//空行统计函数
 int CoCount(char *path);			//注释行统计函数
 int CodeCount(char *path);		//代码统计函数
+
+void Filefind(char *path,char *filename);
