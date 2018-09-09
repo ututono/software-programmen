@@ -3,12 +3,17 @@
 
 char str[500];
 
+struct m_PATH				//递归查询时储存符合条件的地址
+{
+	char filename[100];
+	
+}m_path[50],m_path1;
+
 int CharCount(char * path)
 {
 	FILE *fp = NULL;
 	int c = 0;
 	char ch;
-	//int laenge = strlen(path);						//计算文件名长度
 	if ((fp = fopen(path, "r")) == NULL)		//判空
 	{
 		printf("File read failure.\n");
@@ -168,14 +173,6 @@ const LPCWSTR charstrtowcharstr(char *charstr)
 	return wszClassName;
 }
 
-//void Print(char *strtemp)
-//{
-//	for (int i = 0; i<strlen(strtemp)-1; i++)
-//	{
-//		printf("%s ", str[i]);
-//	}
-//	printf("\n");
-//}
 
 void liemain(char *path)
 {
@@ -295,11 +292,14 @@ bool MatchWithAsteriskW(char* str1, char* pattern)
 
 
 
-void Filefind(char * path,char *filename)
+void Filefind(char * path,char *filename)					//$ review:check chinese word
 {
 	HANDLE Find;
 	WIN32_FIND_DATA finddata;
 	char dir[200];
+	char dirChoose[200];
+	int n = 0;
+
 	strcpy(dir, path);
 	strcat(dir, "\\*.*");							//这里一定要指明通配符，不然不会读取所有文件和目录
 	Find = FindFirstFile(charstrtowcharstr(dir), &finddata);
@@ -315,15 +315,19 @@ void Filefind(char * path,char *filename)
 		}
 		else
 		{
+			
 			if (MatchWithAsteriskW(wchartochar(finddata.cFileName), filename))
 			{
-				printf("gets\n");
-				strcat(path, "\\");
-				liemain(strcat(path,wchartochar(finddata.cFileName)));
+				strcpy(m_path[n++].filename,wchartochar(finddata.cFileName));
+				printf("%2d Lage ist:%s\\%s\n", n,path,wchartochar(finddata.cFileName));
 			}
-			//printf("Lage ist:%s\\%s\n", path, wchartochar(finddata.cFileName));
 		}
 	} while (FindNextFile(Find,&finddata));
+	m_path;
+	printf("choose the num(nur Num):");
+	scanf("%d", &n);
+	strcat(path, "\\");
+	liemain(strcat(path, m_path[n - 1].filename));
 	FindClose(Find);
 }
 

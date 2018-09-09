@@ -1,0 +1,56 @@
+int main()
+{
+	int charcount = 0;
+	int wordcount = 0;
+	int linecount = 0;
+
+
+	while (1)
+	{
+		char ch[5];
+		char path[500];
+		char filename[500];
+		printf("Please input the key:WC.exe \t");
+		scanf("%s", ch);
+		if (ch[0] == 'c')
+		{
+			printf("Lage der Datei: \n");
+			scanf("%s", path);
+			charcount = CharCount(path);
+			printf("Gesamtheit: %d\n", charcount);
+		}
+		else if (ch[0] == 'w')
+		{
+			printf("Lage der Datei: \n");
+			scanf("%s", path);
+			wordcount = WordCount(path);
+			printf("Gesamtheit: %d\n", wordcount);
+		}
+		else if (ch[0] == 'l')
+		{ 
+			printf("Lage der Datei: \n");
+			scanf("%s", path);
+			linecount = LineCount(path);
+			printf("Gesamtheit: %d\n", linecount);
+		}
+		else if (ch[0] == 'a')
+		{
+			printf("Lage der Datei: \n");
+			scanf("%s", path);
+			UebrigFunktion(path);
+		}
+		else if (ch[0] == 's')
+		{
+			printf("Lage der Datei: \n");
+			scanf("%s", path);
+			printf("Filename(support wildcard): \n");
+			scanf("%s", filename);
+			Filefind(path, filename);
+		}
+		else {
+			printf("ERROR\n");
+		}
+	}
+    return 0;
+	getchar();
+}
