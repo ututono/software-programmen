@@ -1,9 +1,0 @@
-﻿    正在创建库 W:\GITrepository\software\ConsoleApplication1\Debug\UnitTest1.lib 和对象 W:\GITrepository\software\ConsoleApplication1\Debug\UnitTest1.exp
-ConsoleApplication1.obj : error LNK2011: 未链接预编译对象；映像可能不能运行
-ConsoleApplication1.obj : error LNK2019: 无法解析的外部符号 "int __cdecl CharCount(char *)" (?CharCount@@YAHPAD@Z)，该符号在函数 _main 中被引用
-ConsoleApplication1.obj : error LNK2019: 无法解析的外部符号 "int __cdecl WordCount(char *)" (?WordCount@@YAHPAD@Z)，该符号在函数 _main 中被引用
-unittest1.obj : error LNK2001: 无法解析的外部符号 "int __cdecl WordCount(char *)" (?WordCount@@YAHPAD@Z)
-ConsoleApplication1.obj : error LNK2019: 无法解析的外部符号 "int __cdecl LineCount(char *)" (?LineCount@@YAHPAD@Z)，该符号在函数 _main 中被引用
-ConsoleApplication1.obj : error LNK2019: 无法解析的外部符号 "void __cdecl UebrigFunktion(char *)" (?UebrigFunktion@@YAXPAD@Z)，该符号在函数 _main 中被引用
-ConsoleApplication1.obj : error LNK2019: 无法解析的外部符号 "void __cdecl Filefind(char *,char *)" (?Filefind@@YAXPAD0@Z)，该符号在函数 _main 中被引用
-W:\GITrepository\software\ConsoleApplication1\Debug\UnitTest1.dll : fatal error LNK1120: 6 个无法解析的外部命令
