@@ -1,13 +1,13 @@
 #include"stdafx.h"
-
+#pragma warning(disable:4996)；
 
 char str[500];
 
 struct m_PATH				//递归查询时储存符合条件的地址
 {
 	char filename[100];
-	
-}m_path[50],m_path1;
+
+}m_path[50], m_path1;
 
 const LPCWSTR charstrtowcharstr(char *charstr);
 char * wchartochar(const wchar_t* wchar);
@@ -23,7 +23,7 @@ int CharCount(char * path)
 		printf("File read failure.\n");
 		exit(-1);
 	}
-	while(!feof(fp))
+	while (!feof(fp))
 	{
 		fscanf(fp, "%s", str);
 		c = c + strlen(str);
@@ -32,7 +32,7 @@ int CharCount(char * path)
 	return c;
 }
 
-int WordCount(char * path)	
+int WordCount(char * path)
 {
 	FILE *fp = NULL;
 	int n = 0;
@@ -41,9 +41,9 @@ int WordCount(char * path)
 		printf("File read failure.\n");
 		exit(-1);
 	}
-	while(!feof(fp))
+	while (!feof(fp))
 	{
-		if (fscanf(fp, "%s", str)&&!(str[0]>='0'&&str[0]<='9'))
+		if (fscanf(fp, "%s", str) && !(str[0] >= '0'&&str[0] <= '9'))
 			n++;
 	}
 	fclose(fp);
@@ -63,7 +63,7 @@ int LineCount(char * path)
 	}
 	while (!feof(fp))
 	{
-		if (fgets(str, sizeof(str),fp))
+		if (fgets(str, sizeof(str), fp))
 			n++;
 	}
 	fclose(fp);
@@ -95,23 +95,23 @@ int EmptylineCount(char * path)
 		int tag1 = 0;												//tag1<2表示行内只有格式控制符或者单个 '}' '{'
 		if (fgets(str, sizeof(str), fp))
 		{
-				for(len = 0;(len<strlen(str)&&(tag1<2));len++)
+			for (len = 0; (len < strlen(str) && (tag1 < 2)); len++)
+			{
+				if (str[0] == '\n')
 				{
-					if (str[0] == '\n')
-					{
-						n++;
-						break;
-					}
-					else if (!(str[len] == '\n' || str[len] == '\t' || str[len] == ' '))
-					{
-						if (str[len] == '{' || str[len] == '}'&& !tag1)
-							tag1=1;
-						else tag1 = 2;
-					}
-					if (len == strlen(str) - 1) n++;				//如果行内只有格式控制符或者单个 '}' '{'则为空行
-				} 
+					n++;
+					break;
+				}
+				else if (!(str[len] == '\n' || str[len] == '\t' || str[len] == ' '))
+				{
+					if (str[len] == '{' || str[len] == '}' && !tag1)
+						tag1 = 1;
+					else tag1 = 2;
+				}
+				if (len == strlen(str) - 1) n++;				//如果行内只有格式控制符或者单个 '}' '{'则为空行
+			}
 		}
-		
+
 
 	}
 	fclose(fp);
@@ -155,7 +155,7 @@ int CodeCount(char * path)
 
 int CoCount(char * path)
 {
-	return LineCount(path)-EmptylineCount(path)-CodeCount(path);
+	return LineCount(path) - EmptylineCount(path) - CodeCount(path);
 }
 
 char * wchartochar(const wchar_t* wchar)					//WCHAR转换为CHAR
@@ -173,7 +173,7 @@ const LPCWSTR charstrtowcharstr(char *charstr)
 
 	WCHAR wszClassName[256];
 	memset(wszClassName, 0, sizeof(wszClassName));
-	MultiByteToWideChar(CP_ACP, 0, charstr, strlen(charstr) + 1, wszClassName,sizeof(wszClassName) / sizeof(wszClassName[0]));
+	MultiByteToWideChar(CP_ACP, 0, charstr, strlen(charstr) + 1, wszClassName, sizeof(wszClassName) / sizeof(wszClassName[0]));
 	return wszClassName;
 }
 
@@ -187,7 +187,7 @@ void liemain(char *path)
 	while (1)
 	{
 		char ch[5];
-		printf("Please input the key %s: \t",path);
+		printf("Please input the key %s: \t", path);
 		scanf("%s", ch);
 		if (ch[0] == 'c')
 		{
@@ -224,7 +224,7 @@ bool MatchWithAsteriskW(char* str1, char* pattern)
 	int mark = 0;//用于分段标记,'*'分隔的字符串
 	int p1 = 0, p2 = 0;
 
-	while (p1<len1 && p2<len2)
+	while (p1 < len1 && p2 < len2)
 	{
 		if (pattern[p2] == '?')
 		{
@@ -280,7 +280,7 @@ bool MatchWithAsteriskW(char* str1, char* pattern)
 			return true;
 		}
 	}
-	while (p2<len2)
+	while (p2 < len2)
 	{
 		/*
 		* pattern多出的字符只要有一个不是*,匹配失败
@@ -296,7 +296,7 @@ bool MatchWithAsteriskW(char* str1, char* pattern)
 
 
 
-void Filefind(char * path,char *filename)					//$ review:check chinese word
+void Filefind(char * path, char *filename)					//$ review:check chinese word
 {
 	HANDLE Find;
 	WIN32_FIND_DATA finddata;
@@ -321,14 +321,14 @@ void Filefind(char * path,char *filename)					//$ review:check chinese word
 		}
 		else
 		{
-			
+
 			if (MatchWithAsteriskW(wchartochar(finddata.cFileName), filename))
 			{
-				strcpy(m_path[n++].filename,wchartochar(finddata.cFileName));
-				printf("%2d Lage ist:%s\\%s\n", n,path,wchartochar(finddata.cFileName));
+				strcpy(m_path[n++].filename, wchartochar(finddata.cFileName));
+				printf("%2d Lage ist:%s\\%s\n", n, path, wchartochar(finddata.cFileName));
 			}
 		}
-	} while (FindNextFile(Find,&finddata));
+	} while (FindNextFile(Find, &finddata));
 	m_path;
 	printf("choose the num(nur Num):");
 	scanf("%d", &n);
