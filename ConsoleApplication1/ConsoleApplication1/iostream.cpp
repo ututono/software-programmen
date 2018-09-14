@@ -43,7 +43,7 @@ int WordCount(char * path)
 	}
 	while(!feof(fp))
 	{
-		if (fscanf(fp, "%s", str)&&!(str[0]>='0'&&str[0]<='9'))
+		if (fscanf(fp, "%s", str)&&!(str[0]>='0'&&str[0]<='9')&& str[0] != '\0')
 			n++;
 	}
 	fclose(fp);
@@ -106,7 +106,11 @@ int EmptylineCount(char * path)
 					{
 						if (str[len] == '{' || str[len] == '}'&& !tag1)
 							tag1=1;
-						else tag1 = 2;
+						else
+						{
+							tag1 = 2;
+							continue;
+						}
 					}
 					if (len == strlen(str) - 1) n++;				//Èç¹ûÐÐÄÚÖ»ÓÐ¸ñÊ½¿ØÖÆ·û»òÕßµ¥¸ö '}' '{'ÔòÎª¿ÕÐÐ
 				} 
@@ -122,12 +126,14 @@ int regelwordcount(char *strtemp)					//Ã¿ÐÐºÏ·¨×Ö·û¸öÊýÍ³¼Æ,²»¼ÆÈë¸ñÊ½¿ØÖÆ×Ö·ûº
 {
 	int n = 0;
 	unsigned int len = 0;
-	unsigned int tag1 = 0;
-	for (len = 0; (len < strlen(strtemp) && (tag1 < 2)); len++)
+	for (len = 0; len < strlen(strtemp); len++)
 		if (!(strtemp[len] == '\n' || strtemp[len] == '\t' || strtemp[len] == ' '))
+		{
 			if ((strtemp[len] == '/'&& strtemp[len + 1] == '/') || (strtemp[len] == '/'&& strtemp[len + 1] == '*'))
 				break;
 			else n++;
+		}
+		else;
 	return n;
 }
 
@@ -146,7 +152,7 @@ int CodeCount(char * path)
 	{
 		if (fgets(str, sizeof(str), fp))
 		{
-			if (regelwordcount(str) > 2) n++;
+			if (regelwordcount(str) > 2||(regelwordcount(str)==1&&(str[0]!='}'&&str[0]!='{'))) n++;
 		}
 	}
 	fclose(fp);
@@ -168,7 +174,7 @@ char * wchartochar(const wchar_t* wchar)					//WCHAR×ª»»ÎªCHAR
 	return m_char;
 }
 
-const LPCWSTR charstrtowcharstr(char *charstr)
+const LPCWSTR charstrtowcharstr(char *charstr)		//charstr×ª»¯³ÉLPCWSTR
 {
 
 	WCHAR wszClassName[256];
@@ -215,7 +221,7 @@ void liemain(char *path)
 	}
 }
 
-bool MatchWithAsteriskW(char* str1, char* pattern)
+bool MatchWithAsteriskW(char* str1, char* pattern)				//Í¨Åä·ûÊ¶±ð
 {
 	if (str1 == NULL) return false;
 	if (pattern == NULL) return false;
